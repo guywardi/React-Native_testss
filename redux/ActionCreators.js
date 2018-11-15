@@ -78,7 +78,7 @@ export const addDishes = (dishes) => ({
 });
 
 ///////////////////////////////////////////////
-////////////////////LEADERS/////////////////////
+////////////////////LEADERS////////////////////
 ///////////////////////////////////////////////
 
 export const fetchLeaders = () => (dispatch) => {
@@ -157,4 +157,16 @@ export const promosFailed = (errmess) => ({
 export const addPromos = (promos) => ({
     type: ActionTypes.ADD_PROMOS,
     payload: promos
+});
+
+
+export const postFavorite = (dishId) => (dispatch) => {
+    setTimeout(() => {
+        dispatch(addFavorite(dishId));
+    }, 2000);
+}
+
+export const addFavorite = (dishId) => ({
+    type: ActionTypes.ADD_FAVORITE,
+    payload: dishId
 });
