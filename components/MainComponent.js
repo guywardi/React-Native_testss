@@ -236,16 +236,16 @@ const MainNavigator = createDrawerNavigator({
     Favorites: {
       screen: FavoritesNavigator,
       navigationOptions: {
-          title: 'My Favorites',
-          drawLable: 'My Favorites',
-          drawerIcon: ({ tintColor }) => (
-              <Icon
-                name='heart'
-                type='font-awesome'
-                size={24}
-                color={tintColor}
-                />
-          )
+        title: 'My Favorites',
+        drawerLabel: 'My Favorites',
+        drawerIcon: ({ tintColor, focused }) => (
+          <Icon
+              name='heart'
+              type='font-awesome'
+              size={24}
+              iconStyle={{ color: tintColor }}
+          />
+        ),
       }
     },
     Reservation: {
