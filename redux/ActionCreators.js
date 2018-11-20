@@ -2,11 +2,54 @@ import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../shared/baseUrl';
 
 ///////////////////////////////////////////////
+/////////////POST COMMENT/////////////////////
+///////////////////////////////////////////////
+
+export const addComment = (comment) => ({
+    type: ActionTypes.ADD_COMMENT,
+    payload: comment
+});
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+    console.log(dishId, rating, author, comment, "WHOA RE YOU");
+    const newComment = {
+        dishId: dishId,
+        rating: rating,
+        author: author,
+        comment: comment
+    };
+    newComment.date = new Date().toISOString();
+
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newComment),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+        if (response.ok) {
+            return response;
+        } else {
+            var error = new Error('Error ' + response.status + ': ' + response.statusText);
+            error.response = response;
+            throw error;
+        }
+    },
+    error => {
+        throw error;
+    })
+    .then(response => response.json())
+    .then(response => {setTimeout(() => { dispatch(addComment(response)) }, 2000)})
+    .catch(error =>  { console.log('post comments', error.message); alert('Your comment could not be posted\nError: '+error.message); });
+};
+
+///////////////////////////////////////////////
 ////////////////////COMMENTS/////////////////////
 ///////////////////////////////////////////////
 
 export const fetchComments = () => (dispatch) => {
-    console.log(baseUrl + 'comments', "WHAATT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     return fetch(baseUrl + 'comments')
     .then(response => {
         if (response.ok) {
@@ -22,7 +65,7 @@ export const fetchComments = () => (dispatch) => {
             throw errmess;
       })
     .then(response => response.json())
-    .then(comments => dispatch(addComments(comments)))
+    .then(comments => {console.log(comments, "BITCH"); dispatch(addComments(comments))})
     .catch(error => dispatch(commentsFailed(error.message)));
 };
 
