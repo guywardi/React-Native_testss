@@ -4,6 +4,7 @@ import { Card, Icon, Rating, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavorite, postComment } from '../redux/ActionCreators';
+import * as Animatable from 'react-native-animatable';
 
 const mapStateToProps = state => {
     return {
@@ -22,6 +23,7 @@ function RenderDish(props) {
     const dish = props.dish;
         if (dish != null) {
             return(
+                <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
                 <Card
                   featuredTitle={dish.name}
                   image={{uri: baseUrl + dish.image}}
@@ -50,6 +52,7 @@ function RenderDish(props) {
                             />
                       </View>
                 </Card>
+                </Animatable.View>
             );
         }
         else {
@@ -57,11 +60,10 @@ function RenderDish(props) {
         }
 }
 
-function RenderComments(comments) {
-    const formComments = comments.comments;
+function RenderComments(props) {
+    const comments = props.comments;
 
     const renderCommentItem = ({item, index}) => {
-
         return (
             <View key={index} style={{margin: 10}}>
                 <Text style={{fontSize: 14}}>{item.comment}</Text>
@@ -69,6 +71,7 @@ function RenderComments(comments) {
                     readOnly
                     type="star"
                     imageSize={10}
+                    fractions={0}
                     style={{flex: 1, flexDirection: 'row', marginTop: 5, marginBottom: 5}}
                     startingValue={+item.rating}/>
                 <Text style={{fontSize: 12}}>{'-- ' + item.author + ', ' + item.date} </Text>
@@ -77,13 +80,15 @@ function RenderComments(comments) {
     }
 
     return (
-        <Card title="Comments">
-        <FlatList
-            data={formComments}
-            renderItem={renderCommentItem}
-            keyExtractor={item => item.id.toString()}
-            />
-        </Card>
+        <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>
+            <Card title="Comments">
+            <FlatList
+                data={comments}
+                renderItem={renderCommentItem}
+                keyExtractor={item => item.id.toString()}
+                />
+            </Card>
+        </Animatable.View>
     );
 }
 
