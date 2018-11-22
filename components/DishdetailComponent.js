@@ -22,6 +22,8 @@ const mapDispatchToProps = dispatch => ({
 function RenderDish(props) {
     const dish = props.dish;
 
+    handleViewRef = ref => this.view = ref;
+
     const recognizeDrag = ({moveX, moveY, dx, dy}) => {
         if ( dx < -200 )
             return true;
@@ -31,7 +33,10 @@ function RenderDish(props) {
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gestureState) => {
-                return true;
+            return true;
+        },
+        onPanResponderGrant: () => {
+          this.view.rubberBand(1000).then(endState => console.log(endState.finished ? 'finished' : 'cancelled'));
         },
         onPanResponderEnd: (e, gestureState) => {
             if(recognizeDrag(gestureState))
@@ -58,35 +63,36 @@ function RenderDish(props) {
         if (dish != null) {
             return(
                 <Animatable.View animation="fadeInDown" duration={2000} delay={1000}
-                    {...panResponder.panHandlers}>
-                <Card
-                  featuredTitle={dish.name}
-                  image={{uri: baseUrl + dish.image}}
-                  >
-                    <Text style={{margin: 10}}>
-                        {dish.description}
-                    </Text>
-                    <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                        <Icon
-                          raised
-                          reverse
-                          name={ props.favorite ? 'heart' : 'heart-o'}
-                          type='font-awesome'
-                          color='#f50'
-                          style={{flex: 1}}
-                          onPress={() => props.favorite ? console.log('Already favorite') : props.onPress()}
-                          />
-                          <Icon
-                            raised
-                            reverse
-                            name='pencil'
-                            type='font-awesome'
-                            color='#512DA8'
-                            style={{flex: 1}}
-                            onPress={() => props.toggleModal()}
-                            />
-                      </View>
-                </Card>
+                ref={this.handleViewRef}
+                {...panResponder.panHandlers}>
+                    <Card
+                      featuredTitle={dish.name}
+                      image={{uri: baseUrl + dish.image}}
+                      >
+                        <Text style={{margin: 10}}>
+                            {dish.description}
+                        </Text>
+                        <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
+                            <Icon
+                              raised
+                              reverse
+                              name={ props.favorite ? 'heart' : 'heart-o'}
+                              type='font-awesome'
+                              color='#f50'
+                              style={{flex: 1}}
+                              onPress={() => props.favorite ? console.log('Already favorite') : props.onPress()}
+                              />
+                              <Icon
+                                raised
+                                reverse
+                                name='pencil'
+                                type='font-awesome'
+                                color='#512DA8'
+                                style={{flex: 1}}
+                                onPress={() => props.toggleModal()}
+                                />
+                          </View>
+                    </Card>
                 </Animatable.View>
             );
         }
