@@ -22,7 +22,6 @@ class Login extends Component {
                     this.setState({ username: userinfo.username });
                     this.setState({ password: userinfo.password });
                     this.setState({ remember: true });
-
                 }
             })
     }
